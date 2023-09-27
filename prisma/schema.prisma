@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+  // directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model User{
+  id String @id @default(cuid())
+  username String @unique
+  firstname String
+  lastname String
+  password String 
+  country String
+  phonenumber String @unique
+  balance Float
+  transfers Transfer[]
+  receptions Reception[]
+}
+
+model Transfer{
+  id String @id @default(cuid())
+  date String
+  amount Float
+  status String
+  recipient_name String
+  senderId String
+  user User @relation(fields: [senderId],references: [id])  
+}
+
+model Reception{
+  id String @id @default(cuid())
+  date String
+  amount Float
+  status String
+  sender_name String
+  recipientId String
+  user User @relation(fields: [recipientId],references: [id])  
+}
